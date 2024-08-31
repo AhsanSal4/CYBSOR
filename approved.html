@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="treward.css">
+</head>
+<body>
+    <a href="index.html"><button class="home">Home</button></a>
+    <div id="approved-notes"></div>
+
+    <script>
+       async function fetchApprovedNotes() {
+    try {
+        const response = await fetch('http://localhost:3000/verify/approved');
+        if (response.ok) {
+            const notes = await response.json();
+            const container = document.getElementById('approved-notes');
+            container.innerHTML = ''; // Clear previous notes
+
+            if (notes.length > 0) {
+                notes.forEach(note => {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.innerHTML = `
+                        <h3>${note.title}</h3>
+                        <a href="${note.fileUrl}" target="_blank">View Note</a><br>
+                    `;
+                    container.appendChild(noteDiv);
+                });
+            } else {
+                container.innerHTML = '<p>No approved notes found.</p>';
+            }
+        } else {
+            console.error('Failed to fetch approved notes');
+        }
+    } catch (error) {
+        console.error('Error fetching approved notes:', error);
+    }
+}
+
+
+        // Initialize the dashboard
+        async function initDashboard() {
+            await fetchApprovedNotes(); // Load approved notes
+        }
+
+        initDashboard(); // Initialize when the page loads
+    </script>
+</body>
+</html>

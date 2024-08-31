@@ -8,14 +8,18 @@
 </head>
 <body>
     <a href="index.html"><button class="home">Home</button></a>
-    <div class="overlay"></div>
-    <div class="rew-container">
-        <h1>Welcome, <span id="teacherName">[Teacher Name]</span></h1>
-        <p>Your Rewards: <span id="teacherRewards">0</span></p>
-
-        <h1>Pending Notes</h1>
+    <a href="approved.html"><button class="approvedn">Approved Notes</button></a>
+    <div class="note-page">
+        <div class="left">
+            <div class="rew-container">
+                <h1>Welcome, <span id="teacherName">[Teacher Name]</span></h1>
+                <p>Your Rewards: <span id="teacherRewards">0</span></p>
+                <h1>Pending Notes</h1>
+            </div>
+            <div id="notesContainer"></div>
+        </div>
+        <div id="approved-notes"></div>
     </div>
-    <div id="notesContainer"></div>
 
     <script>
         // Fetch and display teacher's name and rewards

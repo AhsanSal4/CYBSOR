@@ -53,6 +53,13 @@ input[type="file"] {
     border-radius: 5px;
 }
 
+.approvedn{
+    z-index: 50;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
 button {
     background-color: #FFC451;
     color: #FFFFFF;

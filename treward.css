@@ -17,7 +17,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(105, 95, 95, 0.5); /* Black overlay with 50% opacity */
+    background-color: rgba(105, 95, 95, 0.1); /* Black overlay with 50% opacity */
 }
 
 .rew-container {
@@ -38,6 +38,12 @@ body {
     top: 10px;
     left: 10px;
 }
+.approvedn{
+    z-index: 50;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
 button {
     background-color: #FFC451;
     color: #FFFFFF;
@@ -53,4 +59,23 @@ button {
 
 button:hover {
     background-color: #5E3A3F;
+}
+.note-page{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 100% 50%;
+}
+.left{
+    display: grid;
+    place-items: center;
+}
+#approved-notes{
+    width: 100%;
+    height: 100dvh;
+}
+#notesContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
 }
