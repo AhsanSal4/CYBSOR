@@ -16,7 +16,7 @@ const db = admin.firestore();
 const bucket = admin.storage().bucket(); // Initialize Firebase Storage
 const app = express();
 app.use(express.static(path.join(__dirname, 'frontend')));
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors()); 
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 // Route to get the logged-in user's info (e.g., teacher info)
@@ -69,44 +69,38 @@ app.get('/verify/pending', async (req, res) => {
 
 app.get('/verify/approved', async (req, res) => {
     try {
-        // Fetch all notes that are approved
-        const snapshot = await db.collection('notes').where('approved', '==', true).get();
-
+        const snapshot = await db.collection('notes').where('approved', '===', true).get();
         if (snapshot.empty) {
             return res.status(404).json({ message: 'No approved notes found' });
         }
 
-        // Map the notes to include their data and IDs
         const notes = snapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() }));
 
-        // Generate signed URLs for each note
         const signedUrls = await Promise.all(
             notes.map(async (note) => {
                 try {
-                    const filePath = note.filePath; // Ensure this is the relative path to the file in Firebase Storage
+                    const filePath = note.filePath; // Ensure this is the relative path
                     const file = bucket.file(filePath);
 
-                    // Generate a signed URL with a long expiration date
+                    // Generate a signed URL with a long expiration
                     const [url] = await file.getSignedUrl({
                         action: 'read',
                         expires: '03-01-2030' // Set a very long expiration date
                     });
 
-                    return { ...note, fileUrl: url }; // Append the signed URL to each note object
+                    return { ...note, fileUrl: url };
                 } catch (error) {
                     console.error(`Error fetching signed URL for note ID ${note._id}:`, error.message);
-                    return { ...note, fileUrl: null }; // If there's an error, return null for fileUrl
+                    return { ...note, fileUrl: null };
                 }
             })
         );
-
-        res.json(signedUrls); // Return the notes with their signed URLs
+        res.json(signedUrls);
     } catch (error) {
-        console.error('Error fetching approved notes:', error); // Log full error
+        console.error('Error fetching approved notes:', error);
         res.status(500).send('Error fetching approved notes');
     }
 });
-
 
 
 
