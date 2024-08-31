@@ -1,0 +1,29 @@
+<!-- student_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Welcome, [Student Name]</h1>
+    <p>Your Rewards: <span id="studentRewards"></span></p>
+
+    <!-- Existing upload form code -->
+    <form id="uploadForm" enctype="multipart/form-data">
+        <!-- Upload form fields -->
+    </form>
+
+    <script>
+        async function fetchStudentRewards() {
+            const response = await fetch('/auth/me'); // Assuming you have a route to get the logged-in user's info
+            const user = await response.json();
+            document.getElementById('studentRewards').innerText = user.rewards;
+        }
+
+        fetchStudentRewards();
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="treward.css">
+</head>
+<body>
+    <div class="overlay"></div>
+        <div class="rew-container" >
+    <h1>Welcome, <span id="teacherName">[Teacher Name]</span></h1>
+    <p>Your Rewards: <span id="teacherRewards">0</span></p>
+
+    <h1>Pending Notes</h1>
+    </div>
+    <div id="notesContainer"></div>
+
+    <script>
+        // Fetch and display teacher's name and rewards
+        async function fetchTeacherInfo() {
+            try {
+                const response = await fetch('/auth/me'); // Route to get the logged-in user's info
+                if (response.ok) {
+                    const user = await response.json();
+                    document.getElementById('teacherName').innerText = user.username;
+                    document.getElementById('teacherRewards').innerText = user.rewards;
+                } else {
+                    console.error('Failed to fetch teacher info');
+                }
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+            }
+        }
+
+        // Fetch and display pending notes for approval
+        async function fetchPendingNotes() {
+            try {
+                const response = await fetch('/verify/pending');
+                if (response.ok) {
+                    const notes = await response.json();
+                    const container = document.getElementById('notesContainer');
+                    container.innerHTML = ''; // Clear the container before adding new notes
+
+                    notes.forEach(note => {
+                        const noteDiv = document.createElement('div');
+                        noteDiv.innerHTML = `
+                            <h3>${note.title}</h3>
+                            <a href="${note.filePath}" target="_blank">View Note</a><br>
+                            <button onclick="approveNote('${note._id}')">Approve</button>
+                            <button onclick="rejectNote('${note._id}')">Reject</button>
+                        `;
+                        container.appendChild(noteDiv);
+                    });
+                } else {
+                    console.error('Failed to fetch pending notes');
+                }
+            } catch (error) {
+                console.error('Error fetching pending notes:', error);
+            }
+        }
+
+        // Approve note and refresh list
+        async function approveNote(noteId) {
+            try {
+                const response = await fetch(`/verify/approve/${noteId}`, { method: 'POST' });
+                const result = await response.json();
+                alert(result.message);
+                fetchPendingNotes(); // Refresh the list after action
+            } catch (error) {
+                console.error('Error approving note:', error);
+            }
+        }
+
+        // Reject note and refresh list
+        async function rejectNote(noteId) {
+            try {
+                const response = await fetch(`/verify/reject/${noteId}`, { method: 'POST' });
+                const result = await response.json();
+                alert(result.message);
+                fetchPendingNotes(); // Refresh the list after action
+            } catch (error) {
+                console.error('Error rejecting note:', error);
+            }
+        }
+
+        // Initialize the dashboard
+        async function initDashboard() {
+            await fetchTeacherInfo(); // Load teacher's info
+            await fetchPendingNotes(); // Load pending notes
+        }
+
+        initDashboard(); // Initialize when the page loads
+    </script>
+</body>
+</html>
