@@ -69,7 +69,7 @@ app.get('/verify/pending', async (req, res) => {
 
 app.get('/verify/approved', async (req, res) => {
     try {
-        const snapshot = await db.collection('notes').where('approved', '===', true).get();
+        const snapshot = await db.collection('notes').where('approved', '==', true).get();
         if (snapshot.empty) {
             return res.status(404).json({ message: 'No approved notes found' });
         }
