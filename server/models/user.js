@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// Define the User schema
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -17,8 +18,13 @@ const UserSchema = new mongoose.Schema({
     enum: ['student', 'teacher'],
     required: true,
   },
+  rewards: {
+    type: Number,
+    default: 0, // Initialize rewards to 0
+  },
 });
 
+// Middleware to hash password before saving
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
@@ -28,9 +34,10 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+// Method to match entered password with hashed password
 UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Export the User model
 module.exports = mongoose.model('User', UserSchema);
-
