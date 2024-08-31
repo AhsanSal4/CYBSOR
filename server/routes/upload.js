@@ -1,29 +1,29 @@
-// backend/routes/upload.js
+// routes/upload.js
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 
 const router = express.Router();
 
-// Set up storage engine for multer
+// Set up Multer storage
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = './uploads';
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
-    cb(null, dir);
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads')); // Store files in the 'uploads' folder
   },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Append timestamp to avoid duplicate names
+  }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
-router.post('/file', upload.single('file'), (req, res) => {
-  res.json({ message: 'File uploaded successfully', file: req.file });
+// Route to handle file upload
+router.post('/', upload.single('file'), (req, res) => {
+  try {
+    res.json({ message: 'File uploaded successfully', file: req.file });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to upload file' });
+  }
 });
 
 module.exports = router;
