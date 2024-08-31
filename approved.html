@@ -22,6 +22,8 @@
             if (notes.length > 0) {
                 notes.forEach(note => {
                     const noteDiv = document.createElement('div');
+                    noteDiv.style.background='rgba(255,255,255,0.5)';
+                    noteDiv.style.padding="10px";
                     noteDiv.innerHTML = `
                         <h3>${note.title}</h3>
                         <a href="${note.fileUrl}" target="_blank">View Note</a><br>

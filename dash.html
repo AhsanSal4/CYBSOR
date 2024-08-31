@@ -48,6 +48,8 @@
 
                     notes.forEach(note => {
                         const noteDiv = document.createElement('div');
+                        noteDiv.style.background='rgba(255,255,255,0.5)';
+                        noteDiv.style.padding="10px";
                         console.log(note)
                         noteDiv.innerHTML = `
                             <h3>${note.title}</h3>
