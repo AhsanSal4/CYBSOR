@@ -73,3 +73,10 @@ button:hover {
 a {
     text-decoration: none;
 }
+
+.home{
+    z-index: 50;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
