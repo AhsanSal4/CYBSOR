@@ -26,19 +26,19 @@
     </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js";
+        import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
     
         // Firebase configuration
         const firebaseConfig = {
-  apiKey: "AIzaSyClSVGzGuOePuguMV-jjjGsdiZeeH_mEZs",
-  authDomain: "cybsor.firebaseapp.com",
-  projectId: "cybsor",
-  storageBucket: "cybsor.appspot.com",
-  messagingSenderId: "584141481372",
-  appId: "1:584141481372:web:5aa9eccbcb9d358df69459",
-  measurementId: "G-7Y3FPL1ET6"
-};
+            apiKey: "AIzaSyClSVGzGuOePuguMV-jjjGsdiZeeH_mEZs",
+            authDomain: "cybsor.firebaseapp.com",
+            projectId: "cybsor",
+            storageBucket: "cybsor.appspot.com",
+            messagingSenderId: "584141481372",
+            appId: "1:584141481372:web:5aa9eccbcb9d358df69459",
+            measurementId: "G-7Y3FPL1ET6"
+        };
     
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -52,19 +52,18 @@
     
             const title = document.getElementById('title').value;
             const file = document.getElementById('file').files[0];
-            const storageRef = ref(storage, `notes/${file.name}`);
-
+            const storagePath = `notes/${file.name}`; // Set the path for storage
+            const storageRef = ref(storage, storagePath);
     
             try {
                 // Upload the file
                 const snapshot = await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-    
-                // Save metadata to Firestore
+                
+                // Save the relative file path to Firestore, not the download URL
                 await addDoc(collection(firestore, 'notes'), {
                     title: title,
-                    filePath: downloadURL,
-                    approved :false,
+                    filePath: storagePath, // Store the relative path
+                    approved: false,
                     createdAt: serverTimestamp()
                 });
     
@@ -75,6 +74,7 @@
             }
         });
     </script>
+    
     
 </body>
 </html>

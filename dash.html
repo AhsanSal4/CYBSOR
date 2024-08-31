@@ -44,6 +44,7 @@
 
                     notes.forEach(note => {
                         const noteDiv = document.createElement('div');
+                        console.log(note)
                         noteDiv.innerHTML = `
                             <h3>${note.title}</h3>
                             <a href="${note.fileUrl}" target="_blank">View Note</a><br> <!-- Use fileUrl here -->

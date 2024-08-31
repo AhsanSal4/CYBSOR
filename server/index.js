@@ -43,10 +43,14 @@ app.get('/verify/pending', async (req, res) => {
         const signedUrls = await Promise.all(
             notes.map(async (note) => {
                 try {
-                    const file = bucket.file(note.filePath); // Ensure 'filePath' is correct
+                    // Correctly reference the filePath
+                    const filePath = note.filePath; // This should contain just the relative path
+                    const file = bucket.file(filePath); 
+
+                    // Generate a signed URL
                     const [url] = await file.getSignedUrl({
                         action: 'read',
-                        expires: '03-01-2025' // Set an appropriate expiration date
+                        expires: Date.now() + 1000 * 60 * 60 * 24 // Set expiration to 24 hours from now
                     });
                     return { ...note, fileUrl: url }; // Append the signed URL to each note object
                 } catch (error) {
@@ -56,10 +60,10 @@ app.get('/verify/pending', async (req, res) => {
             })
         );
 
-        res.json(signedUrls);
+        res.json(signedUrls); // Return the notes with their signed URLs
     } catch (error) {
         console.error('Error fetching pending notes:', error); // Log full error
-        res.status(444).send('Error fetching pending notes');
+        res.status(500).send('Error fetching pending notes');
     }
 });
 
