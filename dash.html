@@ -9,11 +9,11 @@
 <body>
     <a href="index.html"><button class="home">Home</button></a>
     <div class="overlay"></div>
-        <div class="rew-container" >
-    <h1>Welcome, <span id="teacherName">[Teacher Name]</span></h1>
-    <p>Your Rewards: <span id="teacherRewards">0</span></p>
+    <div class="rew-container">
+        <h1>Welcome, <span id="teacherName">[Teacher Name]</span></h1>
+        <p>Your Rewards: <span id="teacherRewards">0</span></p>
 
-    <h1>Pending Notes</h1>
+        <h1>Pending Notes</h1>
     </div>
     <div id="notesContainer"></div>
 
@@ -21,7 +21,7 @@
         // Fetch and display teacher's name and rewards
         async function fetchTeacherInfo() {
             try {
-                const response = await fetch('/auth/me'); // Route to get the logged-in user's info
+                const response = await fetch('http://localhost:3000/auth/me'); // Adjust the URL if needed
                 if (response.ok) {
                     const user = await response.json();
                     document.getElementById('teacherName').innerText = user.username;
@@ -34,20 +34,19 @@
             }
         }
 
-        // Fetch and display pending notes for approval
         async function fetchPendingNotes() {
             try {
-                const response = await fetch('/verify/pending');
+                const response = await fetch('http://localhost:3000/verify/pending'); // Adjust the URL if needed
                 if (response.ok) {
                     const notes = await response.json();
                     const container = document.getElementById('notesContainer');
-                    container.innerHTML = ''; // Clear the container before adding new notes
+                    container.innerHTML = ''; // Clear previous notes
 
                     notes.forEach(note => {
                         const noteDiv = document.createElement('div');
                         noteDiv.innerHTML = `
                             <h3>${note.title}</h3>
-                            <a href="${note.filePath}" target="_blank">View Note</a><br>
+                            <a href="${note.fileUrl}" target="_blank">View Note</a><br> <!-- Use fileUrl here -->
                             <button onclick="approveNote('${note._id}')">Approve</button>
                             <button onclick="rejectNote('${note._id}')">Reject</button>
                         `;
@@ -64,7 +63,7 @@
         // Approve note and refresh list
         async function approveNote(noteId) {
             try {
-                const response = await fetch(`/verify/approve/${noteId}`, { method: 'POST' });
+                const response = await fetch(`http://localhost:3000/verify/approve/${noteId}`, { method: 'POST' });
                 const result = await response.json();
                 alert(result.message);
                 fetchPendingNotes(); // Refresh the list after action
@@ -76,7 +75,7 @@
         // Reject note and refresh list
         async function rejectNote(noteId) {
             try {
-                const response = await fetch(`/verify/reject/${noteId}`, { method: 'POST' });
+                const response = await fetch(`http://localhost:3000/verify/reject/${noteId}`, { method: 'POST' });
                 const result = await response.json();
                 alert(result.message);
                 fetchPendingNotes(); // Refresh the list after action

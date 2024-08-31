@@ -1,14 +1,26 @@
-// firebaseAdmin.js
+// Test Firestore Query (separate script)
 const admin = require('firebase-admin');
 
-// Replace with the path to your service account key JSON file
-const serviceAccount = require('./path/to/serviceAccountKey.json');
-
+const serviceAccount = require('./cybsor-firebase-adminsdk-gb55e-6efb6131ea.json');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'notetrove-9f4e6.appspot.com' // Your Storage bucket name
 });
 
-const bucket = admin.storage().bucket();
+const db = admin.firestore();
 
-module.exports = bucket;
+async function testFirestoreQuery() {
+    try {
+        const snapshot = await db.collection('notes').where('approved', '==', false).get();
+        if (snapshot.empty) {
+            console.log('No pending notes found');
+        } else {
+            snapshot.docs.forEach(doc => {
+                console.log(doc.id, '=>', doc.data());
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+    }
+}
+
+testFirestoreQuery();

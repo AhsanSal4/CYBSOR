@@ -31,14 +31,14 @@
     
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyCc9agkrGC95xaY8Ag0RrOr_uBw0kzb6cs",
-            authDomain: "notetrove-9f4e6.firebaseapp.com",
-            projectId: "notetrove-9f4e6",
-            storageBucket: "notetrove-9f4e6.appspot.com",
-            messagingSenderId: "559966165888",
-            appId: "1:559966165888:web:7d5aa7d2a59831535b3f65",
-            measurementId: "G-43EM5NR6JJ"
-        };
+  apiKey: "AIzaSyClSVGzGuOePuguMV-jjjGsdiZeeH_mEZs",
+  authDomain: "cybsor.firebaseapp.com",
+  projectId: "cybsor",
+  storageBucket: "cybsor.appspot.com",
+  messagingSenderId: "584141481372",
+  appId: "1:584141481372:web:5aa9eccbcb9d358df69459",
+  measurementId: "G-7Y3FPL1ET6"
+};
     
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -64,6 +64,7 @@
                 await addDoc(collection(firestore, 'notes'), {
                     title: title,
                     filePath: downloadURL,
+                    approved :false,
                     createdAt: serverTimestamp()
                 });
     
